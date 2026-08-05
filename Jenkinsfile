@@ -28,13 +28,14 @@ pipeline{
            steps {
                script {
                echo 'Building Docker Image and Pushing to Private repo....'
-               withCredentials([usernamePassword(credentialsId: 'Docker-Credentials', passwordVariable: 'PASS', usernameVariable: 'USER')])
+               withCredentials([usernamePassword(credentialsId: 'Docker-Credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
                    sh 'docker build -t devops-demo-app:npm-1.0 .'
                    sh "echo $PASS | docker login -u $USER --password-stdin"
                    sh 'docker push devops-demo-app:npm-1.0'
-               }
-           }
-       }
+                    }
+                }
+            }
+        }
        stage("deploy") {
           
            steps {
