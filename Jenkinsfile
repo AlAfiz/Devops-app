@@ -1,17 +1,38 @@
 pipeline{
     agent any
-
+    tools {
+        nodejs 'my-nodejs'
+    }
     stages {
-       stage("build") {
+       stage('Installing Dependencies') {
             
            steps {
-               echo 'building the app....'
+               script {
+                    echo 'Installing Node dependencies....'
+                    sh 'npm install'
+               }
+               
            }
        }
-       stage("test") {
+       stage('Package Application') {
 
            steps {
-               echo 'testing the application....'
+               script {
+               echo 'Packaging the application....'
+               sh 'npm pack'
+               }
+           }
+       }
+       stage('Build and Push Docker Image') {
+
+           steps {
+               script {
+               echo 'Building Docker Image and Pushing to Private repo....'
+               withCredentials([usernamePassword(credentialsId: 'Docker-Credentials', passwordVariable: 'PASS', usernameVariable: 'USER')])
+                   sh 'docker build -t devops-demo-app:npm-1.0 .'
+                   sh "echo $PASS | docker login -u $USER --password-stdin"
+                   sh 'docker push devops-demo-app:npm-1.0'
+               }
            }
        }
        stage("deploy") {
