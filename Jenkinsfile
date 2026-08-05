@@ -29,9 +29,9 @@ pipeline{
                script {
                echo 'Building Docker Image and Pushing to Private repo....'
                withCredentials([usernamePassword(credentialsId: 'Docker-Credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                   sh 'docker build -t devops-demo-app:npm-1.0 .'
+                   sh 'docker build -t zacks222/devops-demo-app:npm-1.0 .'
                    sh "echo $PASS | docker login -u $USER --password-stdin"
-                   sh 'docker push devops-demo-app:npm-1.0'
+                   sh 'docker push zacks222/devops-demo-app:npm-1.0'
                     }
                 }
             }
