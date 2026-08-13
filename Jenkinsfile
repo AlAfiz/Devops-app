@@ -4,6 +4,15 @@ pipeline{
         nodejs 'my-nodejs'
     }
     stages {
+        stage('Clean Workspace') {
+
+           steps {
+               script {
+                echo 'Removing the old artifact from workspace....'
+                sh 'rm -rf *.tgz'
+               }
+           }
+       }
        stage('Increment version') {
             
            steps {
