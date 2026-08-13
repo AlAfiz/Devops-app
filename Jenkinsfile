@@ -68,8 +68,8 @@ pipeline{
                     sh 'git config user.email "jenkins@example.com"'
                     sh 'git config user.name "jenkins"' 
 
-                    sh "git remote set-url origin https://${USER}:${PASS}@github.com/AlAfiz/Devops-app.git"
-                    sh 'git add .'
+                    sh 'git remote set-url origin https://${USER}:${PASS}@github.com/AlAfiz/Devops-app.git'
+                    sh 'git add package.json package-lock.json'
                     sh 'git commit -m "feat: update the github repo with the latest version"'
                     sh 'git push origin HEAD:main'
                 }
