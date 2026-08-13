@@ -9,7 +9,7 @@ pipeline{
            steps {
                script {
                 echo 'Removing the old artifact from workspace....'
-                sh 'rm -rf *.tgz'
+                sh 'rm -f *.tgz'
                }
            }
        }
