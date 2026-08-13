@@ -4,34 +4,48 @@ pipeline{
         nodejs 'my-nodejs'
     }
     stages {
-       stage('Installing Dependencies') {
+       stage('Increment version') {
             
            steps {
                script {
-                    echo 'Installing Node dependencies....'
-                    sh 'npm install'
+                    echo 'Increment version......'
+                    def newVersion = sh(script: "npm version patch -no-git-tag-version", returnStdout: true).trim().replace('v', '')
+                    env.IMAGE_NAME = "${newVersion}"
                }
                
            }
        }
-       stage('Package Application') {
+       stage('Clean-up and Installing the new Application version') {
 
            steps {
                script {
-               echo 'Packaging the application....'
-               sh 'npm pack'
+                echo 'Installing the application....'
+                sh 'npm ci'
                }
            }
        }
+
+
+       stage('Package the new Application version') {
+
+           steps {
+               script {
+                echo 'Packaging the new Application version....'
+                sh 'npm pack'
+               }
+           }
+       }
+
+
        stage('Build and Push Docker Image') {
 
            steps {
                script {
                echo 'Building Docker Image and Pushing to Private repo....'
                withCredentials([usernamePassword(credentialsId: 'Docker-Credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
-                   sh 'docker build -t zacks222/devops-demo-app:npm-1.0 .'
-                   sh "echo $PASS | docker login -u $USER --password-stdin"
-                   sh 'docker push zacks222/devops-demo-app:npm-1.0'
+                   sh "docker build -t zacks222/devops-demo-app:${IMAGE_NAME} ."
+                   sh 'echo $PASS | docker login -u $USER --password-stdin'
+                   sh "docker push zacks222/devops-demo-app:${IMAGE_NAME}"
                     }
                 }
             }
