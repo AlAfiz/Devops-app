@@ -59,6 +59,24 @@ pipeline{
                 }
             }
         }
+
+       stage('Updating to Github'){
+           steps{
+               script{
+                echo 'Updating the Github repo with the latest version....'
+                withCredentials([usernamePassword(credentialsId: 'github.credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                    sh 'git config user.email "jenkins@example.com"'
+                    sh 'git config user.name "jenkins"' 
+
+                    sh "git remote set-url origin https://${USER}:${PASS}@github.com/AlAfiz/Devops-app.git"
+                    sh 'git add .'
+                    sh 'git commit -m "feat: update the github repo with the latest version"'
+                    sh 'git push origin main'
+                }
+               }
+           }
+         
+       } 
        stage("deploy") {
           
            steps {
