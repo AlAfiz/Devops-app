@@ -71,7 +71,7 @@ pipeline{
                     sh "git remote set-url origin https://${USER}:${PASS}@github.com/AlAfiz/Devops-app.git"
                     sh 'git add .'
                     sh 'git commit -m "feat: update the github repo with the latest version"'
-                    sh 'git push -u origin main'
+                    sh 'git push origin HEAD:main'
                 }
                }
            }
