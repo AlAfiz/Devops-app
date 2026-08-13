@@ -9,7 +9,7 @@ pipeline{
            steps {
                script {
                     echo 'Increment version......'
-                    def newVersion = sh(script: "npm version patch -no-git-tag-version", returnStdout: true).trim().replace('v', '')
+                    def newVersion = sh(script: "npm version patch --no-git-tag-version", returnStdout: true).trim().replace('v', '')
                     env.IMAGE_NAME = "${newVersion}"
                }
                
